@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+dist/
+build/
+*.egg-info/
+.venv/
+venv/
+
+# Board state lives in XDG_DATA_HOME now, but don't let a stray one in —
+# it's a fingerprint of your own transcripts.
+board.json

@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "claude-bingo"
+version = "0.1.0"
+description = "Bingo for LLM-isms, scored against your own Claude transcripts."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+authors = [{ name = "Marc Lavallee" }]
+keywords = ["claude", "llm", "bingo", "cli"]
+classifiers = [
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Games/Entertainment",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/OWNER/claude-bingo"
+Issues = "https://github.com/OWNER/claude-bingo/issues"
+
+[project.scripts]
+claude-bingo = "claude_bingo.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["claude_bingo"]

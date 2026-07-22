@@ -1,0 +1,96 @@
+# The phrase bank: things Claude says, catalogued for sport.
+#
+# Each entry is  label = "regex".
+#
+# The label is what lands on the board, so it has to read at a glance in a
+# 13-column cell. The regex is what hunts through the logs, so it can be as
+# pedantic as it likes. Patterns are matched case-insensitively and in
+# multiline mode, so ^ anchors to the start of any line.
+#
+# Table names are categories. They don't affect scoring — they're for
+# organising the bank and for `claude-bingo phrases --category`.
+#
+# PRs welcome. Add to an existing category or start a new one.
+
+[sycophancy]
+"You're absolutely right" = "you'?re absolutely right"
+"You're right" = "you'?re (?:so )?right\\b(?! to)"
+"Great question!" = "(?:great|good|excellent) question"
+"Good catch" = "good catch"
+"You're right to push back" = "you'?re right to push back"
+"Perfect!" = "^\\s*perfect[!.]"
+"Excellent!" = "^\\s*excellent[!.]"
+
+[honesty-performance]
+"honest" = "\\b(?:to be honest|honestly|i'?ll be honest|let me be honest)\\b"
+"Let me be direct" = "let me be direct"
+"To be clear" = "to be clear"
+"I want to be careful" = "i want to be (?:careful|precise)"
+"I should be upfront" = "i (?:should|want to) be upfront"
+
+[therapy-register]
+"sit with" = "\\bsit with (?:it|this|that)\\b"
+"that's a real" = "that'?s a real\\b"
+"I hear you" = "i hear you\\b"
+"worth naming" = "worth naming\\b"
+"the tension here" = "the tension (?:here|is)\\b"
+
+[load-bearing-vocabulary]
+"load-bearing" = "load[- ]bearing"
+"does the heavy lifting" = "(?:does|doing) the heavy lifting"
+"single source of truth" = "single source of truth"
+"footgun" = "\\bfootgun"
+"escape hatch" = "escape hatch"
+"happy path" = "happy path"
+"belt and suspenders" = "belt[- ]and[- ]suspenders"
+"blast radius" = "blast radius"
+"surface area" = "surface area"
+"sharp edges" = "sharp edges"
+
+[linkedin-brain]
+"robust" = "\\brobust\\b"
+"seamless" = "\\bseamless(?:ly)?\\b"
+"leverage" = "\\bleverag(?:e|es|ing)\\b"
+"comprehensive" = "\\bcomprehensive\\b"
+"elegant" = "\\belegant(?:ly)?\\b"
+"delve" = "\\bdelv(?:e|es|ing)\\b"
+"nuanced" = "\\bnuanced?\\b"
+"meaningful" = "\\bmeaningful(?:ly)?\\b"
+"crucially" = "\\b(?:crucially|importantly|notably)\\b"
+"tapestry" = "\\btapestry\\b"
+
+[structural-tics]
+"not just X, but Y" = "not (?:just|only) .{3,40}?,? but\\b"
+"It's worth noting" = "it'?s worth noting"
+"Here's the thing" = "here'?s the (?:thing|kicker|rub)"
+"That said," = "\\bthat said,"
+"At the end of the day" = "at the end of the day"
+"The key insight" = "the key (?:insight|question|thing)"
+"Let me" = "^\\s*let me\\b"
+"I'll go ahead and" = "i'?ll go ahead and"
+"Let's dig in" = "let'?s (?:dig in|dive in|take a look)"
+
+[engineering-theater]
+"production-ready" = "production[- ]ready"
+"battle-tested" = "battle[- ]tested"
+"first-class" = "first[- ]class\\b"
+"under the hood" = "under the hood"
+"out of the box" = "out of the box"
+"root cause" = "root cause"
+"sanity check" = "sanity check"
+"surgical" = "\\bsurgical(?:ly)?\\b"
+"idiomatic" = "\\bidiomatic(?:ally)?\\b"
+
+[confession-booth]
+"I apologize" = "i apologi[sz]e"
+"You're absolutely correct" = "you'?re absolutely correct"
+"I made an error" = "i (?:made an error|was wrong|got that wrong)"
+"Let me reconsider" = "let me (?:reconsider|rethink|take another look)"
+"Wait," = "^\\s*wait[,.]"
+"Hmm" = "^\\s*hmm+\\b"
+
+[closers]
+"Let me know if" = "let me know if"
+"Hope this helps" = "hope (?:this|that) helps"
+"Would you like me to" = "would you like me to"
+"Happy to" = "\\bhappy to\\b"

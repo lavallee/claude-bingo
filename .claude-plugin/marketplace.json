@@ -1,0 +1,16 @@
+{
+  "name": "claude-bingo",
+  "owner": { "name": "Marc Lavallee" },
+  "description": "Bingo for LLM-isms, scored against your own Claude transcripts.",
+  "plugins": [
+    {
+      "name": "claude-bingo",
+      "displayName": "Claude Bingo",
+      "description": "Generate a bingo board of LLM verbal tics and score it against your local Claude Code transcripts.",
+      "source": { "source": "github", "repo": "OWNER/claude-bingo" },
+      "version": "0.1.0",
+      "license": "MIT",
+      "category": "fun"
+    }
+  ]
+}
