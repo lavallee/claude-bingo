@@ -20,8 +20,8 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/OWNER/claude-bingo"
-Issues = "https://github.com/OWNER/claude-bingo/issues"
+Homepage = "https://github.com/lavallee/claude-bingo"
+Issues = "https://github.com/lavallee/claude-bingo/issues"
 
 [project.scripts]
 claude-bingo = "claude_bingo.cli:main"

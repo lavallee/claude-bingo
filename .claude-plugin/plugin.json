@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "Bingo for LLM-isms, scored against your own Claude transcripts.",
   "author": { "name": "Marc Lavallee" },
-  "repository": "https://github.com/OWNER/claude-bingo",
+  "repository": "https://github.com/lavallee/claude-bingo",
   "license": "MIT",
   "keywords": ["fun", "analysis", "transcripts"]
 }

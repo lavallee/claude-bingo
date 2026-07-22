@@ -33,7 +33,7 @@ standard library.
 **As a Claude Code plugin** — then just ask Claude to play bingo:
 
 ```
-/plugin marketplace add OWNER/claude-bingo
+/plugin marketplace add lavallee/claude-bingo
 /plugin install claude-bingo@claude-bingo
 ```
 
@@ -47,7 +47,7 @@ pipx install claude-bingo  # or keep it around
 **From source:**
 
 ```bash
-git clone https://github.com/OWNER/claude-bingo
+git clone https://github.com/lavallee/claude-bingo
 cd claude-bingo
 python3 -m claude_bingo board
 ```
