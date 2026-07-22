@@ -1,0 +1,50 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Phrase bank loads and every regex compiles
+        run: |
+          python -c "
+          from claude_bingo import phrases
+          b = phrases.load()
+          assert b['labels'], 'empty phrase bank'
+          assert len(b['labels']) == len(set(b['labels'])), 'duplicate labels'
+          print(f\"{len(b['labels'])} phrases ok\")
+          "
+
+      - name: Board generates and renders
+        run: |
+          python -m claude_bingo board --seed 1
+          python -m claude_bingo board --size 4 --seed 2
+          python -m claude_bingo phrases > /dev/null
+
+      - name: Score fails gracefully with no transcripts
+        run: |
+          if python -m claude_bingo score > out.txt 2>&1; then
+            echo "expected a nonzero exit with no transcripts present" >&2
+            exit 1
+          fi
+          grep -q "no transcripts" out.txt
+
+      - name: Package builds and installs
+        run: |
+          pip install --quiet build
+          python -m build --wheel
+          pip install --quiet dist/*.whl
+          claude-bingo phrases > /dev/null
