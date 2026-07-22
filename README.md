@@ -19,9 +19,9 @@ transcripts.
 
   ── worst offenders ────────────────────────────────────────
      74  Let me
-         …her than fill it in. Let me answer the oslo question concre…
+         …before changing anything. Let me check what the config actual…
      71  load-bearing
-         …Let me verify a few load-bearing assumptions.
+         …that assumption is doing a lot of load-bearing work here.
 ```
 
 Everything runs locally. It reads `~/.claude/projects/**/*.jsonl` and prints to
