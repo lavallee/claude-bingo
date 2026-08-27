@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1
+
+- `score` no longer counts claude-bingo's own output. A rendered board
+  self-matches 15 of its 24 squares, so every round you played inflated the
+  next one. Blocks carrying a board border are skipped.
+
 ## 0.2.0
 
 - Codex support: ships `.codex-plugin/plugin.json` and a Codex catalog at
