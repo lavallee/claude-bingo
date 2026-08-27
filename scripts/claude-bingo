@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+"""Run the bundled claude_bingo package straight from a plugin checkout.
+
+No install step: the package is pure standard library. This launcher only
+exists to put the plugin root on sys.path and to fail readably when the
+interpreter predates tomllib (3.11), which is the one thing that actually
+goes wrong on a stock macOS python3.
+"""
+
+import shutil
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+if sys.version_info < (3, 11):
+    have = ".".join(str(n) for n in sys.version_info[:3])
+    newer = next(
+        (exe for exe in map(shutil.which, ("python3.14", "python3.13",
+                                           "python3.12", "python3.11")) if exe),
+        None,
+    )
+    hint = (f"try:  {newer} {Path(__file__).resolve()} {' '.join(sys.argv[1:])}"
+            if newer else
+            "no python3.11+ found on PATH — the zero-install path is:  "
+            f"uvx claude-bingo {' '.join(sys.argv[1:]) or 'board'}")
+    sys.exit(f"claude-bingo needs Python 3.11+ for tomllib; this is {have}.\n{hint}")
+
+sys.path.insert(0, str(ROOT))
+
+from claude_bingo.cli import main  # noqa: E402
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,20 @@
+{
+  "name": "claude-bingo",
+  "interface": {
+    "displayName": "Claude Bingo"
+  },
+  "plugins": [
+    {
+      "name": "claude-bingo",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/lavallee/claude-bingo.git"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Other"
+    }
+  ]
+}

@@ -42,9 +42,50 @@ jobs:
           fi
           grep -q "no transcripts" out.txt
 
+      - name: Plugin launcher runs the way the skill invokes it
+        run: |
+          cd /
+          python "$GITHUB_WORKSPACE/scripts/claude-bingo" board --seed 3
+          python "$GITHUB_WORKSPACE/scripts/claude-bingo" phrases > /dev/null
+
+      - name: Manifests, versions and skill paths agree
+        run: python -m unittest discover tests
+
       - name: Package builds and installs
         run: |
           pip install --quiet build
           python -m build --wheel
           pip install --quiet dist/*.whl
           claude-bingo phrases > /dev/null
+
+  old-python:
+    # The one thing that actually breaks on a stock macOS python3: no tomllib.
+    # The launcher must say so in English rather than raise ModuleNotFoundError.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Pre-3.11 gets an explanation, not a traceback
+        run: |
+          if python scripts/claude-bingo board > out.txt 2>&1; then
+            echo "expected a nonzero exit on python 3.10" >&2
+            exit 1
+          fi
+          cat out.txt
+          grep -q "3.11" out.txt
+          if grep -q "Traceback" out.txt; then
+            echo "launcher raised instead of explaining" >&2
+            exit 1
+          fi
+
+  plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Marketplace manifest validates
+        run: npx -y @anthropic-ai/claude-code@latest plugin validate . --strict

@@ -15,35 +15,36 @@ the entire point.
 
 ## Running it
 
-The tool is pure stdlib, so it runs straight from the plugin directory with no
-install step:
+The tool is pure standard library, so it runs from the plugin with no install
+step. Everything goes through one launcher: this plugin's root-level
+`scripts/claude-bingo`. In Claude Code that path is
+`${CLAUDE_PLUGIN_ROOT}/scripts/claude-bingo`; in Codex, resolve it against the
+plugin directory this skill was loaded from.
+
+Below, `claude-bingo` stands for `python3 <that launcher>`.
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m claude_bingo board
+claude-bingo board                    # a fresh board, saved for scoring
+claude-bingo board --size 3           # smaller, for a quick round
+claude-bingo board --seed 12345       # reproduce a specific board
+
+claude-bingo score                    # score the saved board, last 7 days
+claude-bingo score --days 30          # ...or however far back they dare look
+claude-bingo score --no-quotes        # skip the receipts
+claude-bingo score --top 5            # shorter offenders list
+
+claude-bingo phrases                  # the whole bank
+claude-bingo phrases --category linkedin-brain
 ```
 
-Generate a fresh board:
+So a real invocation in Claude Code looks like:
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m claude_bingo board
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m claude_bingo board --size 3
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m claude_bingo board --seed 12345
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/claude-bingo" board
 ```
 
-Score the saved board against recent history:
-
-```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m claude_bingo score
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m claude_bingo score --days 30
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m claude_bingo score --no-quotes
-```
-
-Inspect the phrase bank:
-
-```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m claude_bingo phrases
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m claude_bingo phrases --category linkedin-brain
-```
+If it reports that it needs Python 3.11 or newer, it will also print the exact
+command to retry with. Don't try to work around it by other means.
 
 ## How to respond
 
@@ -58,8 +59,8 @@ PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m claude_bingo phrases --category li
 
 ## Adding phrases
 
-The bank is TOML at `${CLAUDE_PLUGIN_ROOT}/claude_bingo/phrases.toml`. Users can
-add their own without touching the plugin, in
+The bundled bank is TOML at `claude_bingo/phrases.toml` inside the plugin. Users
+can add their own without touching the plugin, in
 `~/.config/claude-bingo/phrases.toml`:
 
 ```toml
@@ -67,8 +68,10 @@ add their own without touching the plugin, in
 "the label on the board" = "the regex that hunts for it"
 ```
 
-Patterns are matched case-insensitively and in multiline mode. A label that
-collides with a bundled one overrides its pattern.
+Patterns are matched case-insensitively and in multiline mode, so `^` anchors to
+the start of any line. A label that collides with a bundled one overrides its
+pattern. `claude-bingo phrases` prints both paths — use it to confirm a new
+entry loaded.
 
 ## Privacy
 
