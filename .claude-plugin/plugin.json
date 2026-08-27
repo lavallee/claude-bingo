@@ -1,7 +1,7 @@
 {
   "name": "claude-bingo",
   "displayName": "Claude Bingo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Bingo for LLM-isms, scored against your own Claude transcripts.",
   "author": { "name": "Marc Lavallee" },
   "repository": "https://github.com/lavallee/claude-bingo",

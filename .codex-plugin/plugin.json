@@ -1,6 +1,6 @@
 {
   "name": "claude-bingo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Generate a bingo board of LLM verbal tics and score it against local Claude Code transcripts.",
   "author": {
     "name": "Marc Lavallee"

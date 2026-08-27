@@ -28,6 +28,11 @@ LOG_ROOT = Path.home() / ".claude" / "projects"
 CELL_W = 15
 FREE = "FREE SPACE"
 
+# Our own output, pasted back into a transcript, matches most of its own
+# squares — a rendered board self-scores 15 of its 24 labels. Every round you
+# play would inflate the next one, so skip any block carrying a board border.
+BOARD_MARK = "─" * CELL_W
+
 # ANSI, kept minimal so it degrades to noise-free plain text when piped.
 RESET, BOLD, DIM = "\033[0m", "\033[1m", "\033[2m"
 GREEN, YELLOW, RED, CYAN, MAGENTA = (
@@ -113,6 +118,8 @@ def _scan_file(args):
                     if not isinstance(block, dict) or block.get("type") != "text":
                         continue
                     text = block.get("text") or ""
+                    if BOARD_MARK in text:  # a board we printed, not prose
+                        continue
                     for label, pat in pats:
                         found = pat.findall(text)
                         if not found:

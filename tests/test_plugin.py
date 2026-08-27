@@ -121,5 +121,33 @@ class SkillTests(unittest.TestCase):
             self.assertIn(f"claude-bingo {cmd}", text)
 
 
+
+class ScoringTests(unittest.TestCase):
+    """The tool's own output is the loudest thing in a heavy user's logs."""
+
+    def setUp(self):
+        sys.path.insert(0, str(ROOT))
+        from claude_bingo import cli
+        self.cli = cli
+
+    def test_a_rendered_board_would_have_self_scored(self):
+        """Guard the premise: without the skip, playing inflates the next round."""
+        from claude_bingo import phrases
+        board = self.cli.make_board(5, 424242)
+        text = self.cli.render(board)
+        bank = phrases.load()["by_label"]
+        hits = [c for c in board["cells"]
+                if c != self.cli.FREE and bank[c].search(text)]
+        self.assertGreater(len(hits), 5, "premise no longer holds; revisit the skip")
+
+    def test_board_output_is_skipped_but_prose_is_not(self):
+        board = self.cli.render(self.cli.make_board(5, 424242))
+        self.assertIn(self.cli.BOARD_MARK, board)
+        self.assertNotIn(
+            self.cli.BOARD_MARK,
+            "I'll go ahead and delve into the load-bearing parts — happy to!",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
