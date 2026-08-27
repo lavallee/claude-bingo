@@ -167,12 +167,22 @@ def scan(days, wanted, jobs):
 
 # ---------------------------------------------------------------- rendering
 
+MAX_CELL_H = 4
+
+
 def wrap_cell(label, count=None):
+    """Cell text, unpadded — render() sizes every row to the tallest cell."""
     lines = textwrap.wrap(label, CELL_W - 2) or [""]
-    if count is not None:
-        lines.append(f"×{count}" if count else "—")
-    lines = lines[:4]
-    return lines + [""] * (4 - len(lines))
+    if count is None:
+        return lines[:MAX_CELL_H]
+    # Keep the count even when an over-long label has to be cut for it.
+    return lines[:MAX_CELL_H - 1] + [f"×{count}" if count else "—"]
+
+
+def pad_cell(lines, height):
+    """Centre a cell's lines vertically in a row of `height` lines."""
+    top = (height - len(lines)) // 2
+    return [""] * top + lines + [""] * (height - len(lines) - top)
 
 
 def render(board, totals=None):
@@ -190,6 +200,17 @@ def render(board, totals=None):
     mid = "├" + "┼".join("─" * CELL_W for _ in range(size)) + "┤"
     bot = "└" + "┴".join("─" * CELL_W for _ in range(size)) + "┘"
 
+    # Size every cell to the tallest one on the board, so an unscored board
+    # doesn't carry the blank lines a scored one needs for its counts.
+    text_of = []
+    for i, label in enumerate(cells):
+        if label == FREE:
+            text_of.append(["FREE", "SPACE"])
+        else:
+            count = None if totals is None else totals.get(label, (0, None))[0]
+            text_of.append(wrap_cell(label, count))
+    height = max(len(lines) for lines in text_of)
+
     out = []
     out.append("  " + "".join(
         color(ch.center(CELL_W + 1), BOLD + MAGENTA) for ch in header))
@@ -200,13 +221,9 @@ def render(board, totals=None):
         rows = []
         for c in range(size):
             i = r * size + c
-            label = cells[i]
-            count = None if totals is None else totals.get(label, (0, None))[0]
-            if label == FREE:
-                rows.append((["", "FREE", "SPACE", ""], True))
-            else:
-                rows.append((wrap_cell(label, count), i in marked))
-        for line_no in range(4):
+            rows.append((pad_cell(text_of[i], height),
+                         cells[i] == FREE or i in marked))
+        for line_no in range(height):
             parts = []
             for lines, is_marked in rows:
                 text = lines[line_no].center(CELL_W)

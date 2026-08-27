@@ -6,22 +6,37 @@ transcripts.
 ```
          B               I               N               G               O
   ┌───────────────┬───────────────┬───────────────┬───────────────┬───────────────┐
-  │   I hear you  │   Good catch  │ battle-tested │  load-bearing │  worth naming │
-  │       ×2      │       ×9      │       —       │      ×71      │       ×3      │
+  │               │               │               │ I'll go ahead │               │
+  │    Happy to   │    leverage   │    footgun    │      and      │    nuanced    │
+  │       ×5      │      ×53      │       ×1      │       —       │      ×16      │
   ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤
-  │    Happy to   │   Let me be   │   Hope this   │   Excellent!  │     Let me    │
-  │       ×4      │     direct    │     helps     │       —       │      ×74      │
-  │               │       ×2      │       —       │               │               │
+  │               │     Great     │               │               │               │
+  │  load-bearing │   question!   │  escape hatch │    sit with   │   idiomatic   │
+  │      ×413     │       ×2      │      ×15      │       —       │       ×6      │
+  ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤
+  │   Let me be   │               │               │  Let me know  │               │
+  │     direct    │   crucially   │      FREE     │       if      │  blast radius │
+  │       —       │      ×78      │     SPACE     │       —       │       ×7      │
+  ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤
+  │               │               │               │   Would you   │     You're    │
+  │   happy path  │  surface area │   meaningful  │   like me to  │   absolutely  │
+  │       —       │       ×1      │      ×136     │       —       │    correct    │
+  ├───────────────┼───────────────┼───────────────┼───────────────┼───────────────┤
+  │               │               │    The key    │ single source │               │
+  │  To be clear  │ comprehensive │    insight    │    of truth   │     robust    │
+  │       ×3      │      ×23      │      ×10      │       ×1      │      ×23      │
   └───────────────┴───────────────┴───────────────┴───────────────┴───────────────┘
 
-  BINGO! row 1, diagonal ↘
-  18/25 squares · 201 utterances · 1,534 transcripts
+  BINGO! row 5, col I, col N
+  18/25 squares · 793 utterances · 3,027 transcripts
 
   ── worst offenders ────────────────────────────────────────
-     74  Let me
-         …before changing anything. Let me check what the config actual…
-     71  load-bearing
-         …that assumption is doing a lot of load-bearing work here.
+    413  load-bearing
+         …nothing I touched there was load-bearing.
+    136  meaningful
+         …no meaningful difference between the two paths.
+     78  crucially
+         …and, crucially, it never reaches the network.
 ```
 
 Everything runs locally. It reads `~/.claude/projects/**/*.jsonl` and prints to
@@ -30,29 +45,69 @@ standard library.
 
 ## Install
 
-**As a Claude Code plugin** — then just ask Claude to play bingo:
+Pick whichever of these you'll actually remember. All three end up running the
+same code.
 
-```
-/plugin marketplace add lavallee/claude-bingo
-/plugin install claude-bingo@claude-bingo
-```
-
-**As a CLI:**
+### Try it without installing anything
 
 ```bash
-uvx claude-bingo board     # no install
-pipx install claude-bingo  # or keep it around
+uvx claude-bingo board
+uvx claude-bingo score
 ```
 
-**From source:**
+### As an agent plugin
+
+Then just ask your agent to play bingo. Two marketplaces carry it — use either.
+
+**From [Lyra Forge](https://github.com/lyra-forge/marketplace)**, alongside its
+sibling plugins:
+
+```text
+# Claude Code
+/plugin marketplace add lyra-forge/marketplace
+/plugin install claude-bingo@lyra-forge
+
+# Codex
+codex plugin marketplace add lyra-forge/marketplace
+codex plugin add claude-bingo@lyra-forge
+```
+
+**Or straight from this repository**, which ships its own one-entry catalog:
+
+```text
+# Claude Code
+/plugin marketplace add lavallee/claude-bingo
+/plugin install claude-bingo@claude-bingo
+
+# Codex
+codex plugin marketplace add lavallee/claude-bingo
+codex plugin add claude-bingo@claude-bingo
+```
+
+Start a new session afterwards. Then ask for a bingo board in plain English, or
+invoke the skill directly — `/claude-bingo:bingo` in Claude Code,
+`$claude-bingo:bingo` in Codex.
+
+The plugin needs no install step of its own: it runs the bundled package from
+the plugin directory using whatever `python3` you already have. The Codex plugin
+scores your *Claude Code* transcripts on the same machine, which is the joke.
+
+### As a CLI you keep around
+
+```bash
+pipx install claude-bingo   # or: uv tool install claude-bingo
+```
+
+### From source
 
 ```bash
 git clone https://github.com/lavallee/claude-bingo
 cd claude-bingo
-python3 -m claude_bingo board
+./scripts/claude-bingo board
 ```
 
-Requires Python 3.11+ (for `tomllib`).
+Every path needs Python 3.11+ (for `tomllib`) and nothing else. Stock macOS
+ships 3.9 — if that's what you have, `uvx claude-bingo` sidesteps it entirely.
 
 ## Use
 
@@ -63,6 +118,7 @@ claude-bingo board --seed 12345 # reproduce a specific board
 claude-bingo score              # score it against the last 7 days
 claude-bingo score --days 30    # ...or however far back you dare look
 claude-bingo score --no-quotes  # skip the receipts
+claude-bingo score --top 5      # a shorter walk of shame
 claude-bingo phrases            # list the phrase bank
 ```
 
@@ -103,6 +159,36 @@ or start a new one. Two things make a good entry:
 
 Run `claude-bingo phrases` to check yours loaded, and `claude-bingo score` to
 see whether it actually catches anything.
+
+## Layout
+
+The repository is one Python package plus the manifests each harness looks for:
+
+```
+claude_bingo/                    the package — CLI, phrase loader, phrases.toml
+scripts/claude-bingo             launcher the plugin runs; no install needed
+skills/bingo/SKILL.md            the skill both harnesses load
+.claude-plugin/plugin.json       Claude Code plugin manifest
+.claude-plugin/marketplace.json  this repo as a one-entry Claude Code catalog
+.codex-plugin/plugin.json        Codex plugin manifest
+.agents/plugins/marketplace.json this repo as a one-entry Codex catalog
+```
+
+## Releasing
+
+The version lives in four places — `pyproject.toml`,
+`claude_bingo/__init__.py`, and both `plugin.json` files. `tests/` fails if they
+drift, so bump them together, then:
+
+```bash
+python3 -m unittest discover tests
+claude plugin validate . --strict
+```
+
+Tag and publish a GitHub release; CI builds the wheel and pushes it to PyPI via
+trusted publishing. Plugin installs resolve from the default branch, so they
+pick the change up as soon as it's pushed — no marketplace edit is needed unless
+the entry itself changes.
 
 ## License
 
